@@ -1,4 +1,6 @@
+// -----------------------------------------------
 // Organising code
+// -----------------------------------------------
 
 
 // Let's translate previous example into reusable Synth Definition i.e. SynthDef
@@ -72,35 +74,13 @@ Pbind(
 ).play
 )
 
-// but they're not going away. To free them we'll need to add an envelope and "gate" argument
 
 
-(
-SynthDef(\wind_chime, {
-	arg out=0, gate = 1;
-	var exciter, sound, env;
 
-	env = EnvGen.kr(Env.new(), gate, doneAction: 2);
+// -----------------------------------------------
+// let's boot strap - sequence a base line
+// -----------------------------------------------
 
-	exciter = Decay.ar(Dust.ar(2), 0.03, ClipNoise.ar(0.01));
-
-	sound = DynKlank.ar(`[
-		Array.fill(12, {Rand(30,15000)}),         // frequencies - notice the use of UGen
-		nil,                             // amplitudes (default to 1.0)
-		Array.fill(12, {Rand(0.1,2.0)})               // ring times
-	],
-	exciter);
-
-	sound = Pan2.ar(sound, rrand(-1.0,1.0));
-	sound = sound * env;
-
-	Out.ar(out, sound);
-
-}).add
-)
-
-
-// let's sequence a base line
 (
 SynthDef(\saw_texture, {
 	arg out = 0, gate = 1, freq = 440;
@@ -108,8 +88,9 @@ SynthDef(\saw_texture, {
 	var sound, env;
 
 	env = EnvGen.ar(Env.asr(),gate, doneAction:2);
+	sound = Saw.ar(freq, 0.1);
 
-	sound = Mix.new(Saw.ar([freq*0.999, freq, freq*1.001], 0.1));
+	// sound = Mix.new(Saw.ar([freq*0.999, freq, freq*1.001], 0.1));
 
 	Out.ar(out, sound * env!2);
 }).add
@@ -119,6 +100,9 @@ a = Synth(\saw_texture)
 a.set(\freq, 40)
 
 
+
+TempoClock.default.tempo = 1;
+
 (
 Pbind(
 	\instrument, \saw_texture,
@@ -126,3 +110,9 @@ Pbind(
 	\dur, Pseq([0.5,0.5, 0.3],inf)
 ).play
 )
+
+
+
+//
+// 10-minute excercise - make your own bass line
+//
