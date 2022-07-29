@@ -42,40 +42,53 @@ SynthDef(\piano_soundboard,{
 //start soundboard effect
 Synth.tail(1,\piano_soundboard);
 
-(
-Ndef(\soundboard, {
-	var audio = In.ar([20, 21], 2);
-	audio = OteySoundBoard.ar(audio);
-	Out.ar([22,23],audio);
-}).play;
-)
-
-Ndef(\reverb).play;
-Ndef(\reverb).fadeTime = 2.0;
-
-(
-Ndef(\reverb, {
-	var audio = In.ar([22, 23], 2);
-	audio = MiVerb.ar(audio, 0.1, 0.15, 0.13, 0.5);
-	Out.ar(0,audio);
-})
-)
-
 
 //
 // composition part
 //
 
 
+
 (
-Pdef(\a,
-	Pbind(
-		\instrument, \eno_otey,
-		\note, Pseq([12], inf))
-);
-Pdef(\a).quant = 0; // no waiting.
-Pbindf(Pdef(\a), \dur, Pseq([17.1], inf)).play;
-);
+a = Pbind(
+	\instrument, \eno_otey,
+	\note, Pseq([12], inf),
+	\dur, Pseq([17.1],inf)
+));
+
+
+(
+b = Pbind(
+	\instrument, \eno_otey,
+	\note, Pseq([20, 17, 8], inf),
+	\dur,	Pseq([1,1.1,23], inf)
+));
+
+
+(
+c = Pbind(
+	\instrument, \eno_otey,
+	\note, Pseq([8,5,7,5], inf)
+	\dur, Pseq([1,1,1,24.5], inf);
+));
+
+
+(
+d = Pbind(
+	\instrument, \eno_otey,
+	\note, Pseq([10], inf),
+	\dur, Pseq([31.1], inf);
+));
+
+
+(
+e = Pbind(
+	\instrument, \eno_otey,
+	\note, Pseq([0,8,7,5], inf),
+	\dur, Pseq([0.5,1,1,31.1], inf)
+));
+
+
 
 
 (

@@ -22,13 +22,16 @@
 )
 
 // SynthDef version of the convenience .play sketch method above
+// we need to add envelope to be able to turn the sound on and off
+// ADSR envelope: https://blog.landr.com/wp-content/uploads/2016/10/ASDR-01.jpg
 
 (
 SynthDef(\wind_chime, {
-	arg out=0;
-	var exciter, sound;
+	arg out=0, gate=1, trig_freq = 2;
+	var exciter, sound, envelope;
 
-	exciter = Decay.ar(Dust.ar(2), 0.03, ClipNoise.ar(0.01));
+	envelope = EnvGen.kr(Env.asr(), gate, doneAction: 2);
+	exciter = Decay.ar(Dust.ar(trig_freq), 0.03, ClipNoise.ar(0.01));
 
 	sound = DynKlank.ar(`[
 		Array.fill(12, {Rand(30,15000)}),         // frequencies - notice the use of UGen
@@ -37,7 +40,7 @@ SynthDef(\wind_chime, {
 	],
 	exciter);
 
-	sound = Pan2.ar(sound, rrand(-1.0,1.0));
+	sound = Pan2.ar(sound, rrand(-1.0,1.0)) * envelope;
 
 	Out.ar(out, sound);
 
@@ -49,16 +52,17 @@ SynthDef(\wind_chime, {
 a = Synth(\wind_chime);
 b = Synth(\wind_chime);
 c = Synth(\wind_chime);
-d = Synth(\wind_chime);
-e = Synth(\wind_chime);
-f = Synth(\wind_chime);
 
 a.free;
 b.free;
 c.free;
-d.free;
-e.free;
-f.free;
+
+
+a.set(\gate, 0);
+b.set(\gate, 0);
+c.set(\gate, 0);
+
+a.set(\trig_freq, 10);
 
 // Now we can spawn these synths using Pbind method from the Patterns library
 (
@@ -93,4 +97,32 @@ SynthDef(\wind_chime, {
 	Out.ar(out, sound);
 
 }).add
+)
+
+
+// let's sequence a base line
+(
+SynthDef(\saw_texture, {
+	arg out = 0, gate = 1, freq = 440;
+
+	var sound, env;
+
+	env = EnvGen.ar(Env.asr(),gate, doneAction:2);
+
+	sound = Mix.new(Saw.ar([freq*0.999, freq, freq*1.001], 0.1));
+
+	Out.ar(out, sound * env!2);
+}).add
+)
+
+a = Synth(\saw_texture)
+a.set(\freq, 40)
+
+
+(
+Pbind(
+	\instrument, \saw_texture,
+	\freq, Pseq([40, 45, 55], inf),
+	\dur, Pseq([0.5,0.5, 0.3],inf)
+).play
 )
