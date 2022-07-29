@@ -1,4 +1,26 @@
+/*------------------------------------------------------------------
 
+SuperCollider is (nearly) as vast as the world of music itself
+
+the ways to create, control, manipulat, analyse sound are almost endless
+
+as are the ways to structure composition for real-time performance or "tape" pieces
+
+
+In this 2-hour we'll aim to
+
+* cover basic syntax and core concepts that will help you navigate documentation and examples by yourself
+
+* introduce most popular sound synthesis techniques
+
+* apply this knowledge to create our own mini-compositions
+
+------------------------------------------------------------------*/
+
+
+// -----------------------------------------------
+// basic shortcuts and commands
+// -----------------------------------------------
 // cmd + b - boot the server
 // bottom right text should light up green
 // interpreter: active
@@ -7,6 +29,11 @@
 // shift + enter - on the line to execute it
 // cmd + enter - to execute code within round brackets
 // cmd + . - to stop the sound
+
+
+// -----------------------------------------------
+// Let's get into it
+// -----------------------------------------------
 
 // Immediate sound
 {SinOsc.ar*0.1}.play
@@ -25,9 +52,14 @@
 {SinOsc.ar(MouseX.kr(30, 3000),0.0, 0.1) !2}.freqscope
 
 
+
+// -----------------------------------------------
+// scopes
+// -----------------------------------------------
 // cmd-shift-m - scope
 // cmd-alt-m - freqscope
 // keep both of them open all the time
+
 
 
 //
@@ -35,44 +67,42 @@
 //
 
 
-//
+// -----------------------------------------------
 // Modulation - nesting UGens
-//
-
-//
+// -----------------------------------------------
 // AM / Tremolo - amplitude modulation
-//
+// -----------------------------------------------
 
-{SinOsc.ar(440, 0.0, SinOsc.ar(3, 0.0, 0.25, 0.5))!2}.play
+{SinOsc.ar(440, 0.0, SinOsc.ar(3, 0.0, 0.05, 0.1))!2}.play
 
 
 // AM / Tremolo - now with mouse control
-{SinOsc.ar(440, 0.0, SinOsc.ar(MouseX.kr(0.1,10000,1), 0.0, 0.5, 0.5))!2}.play
+{SinOsc.ar(440, 0.0, SinOsc.ar(MouseX.kr(0.1,10000,1), 0.0, 0.05, 0.1))!2}.play
 
 
 // !! notice the formation of new harmonics when modulator enters audible range
 
-//
+// -----------------------------------------------
 // FM / Vibrato - frequency modulation
-//
+// -----------------------------------------------
 
 // still same clean sine wave
 // consider what "mul" and "add" arguments represent in this case
-{SinOsc.ar(SinOsc.ar(0,0,0,440), 0.0, 0.5)!2}.play
+{SinOsc.ar(SinOsc.ar(0,0,0,440), 0.0, 0.1)!2}.play
 
 // gentle tremolo, 20Hz wide at 8Hz
-{SinOsc.ar(SinOsc.ar(8,0,10,440), 0.0, 0.5)!2}.play
+{SinOsc.ar(SinOsc.ar(8,0,10,440), 0.0, 0.1)!2}.play
 
 // not-so gentle tremolo, 880hz wide at 3Hz
-{SinOsc.ar(SinOsc.ar(3,0,440,440), 0.0, 0.5)!2}.play
+{SinOsc.ar(SinOsc.ar(3,0,440,440), 0.0, 0.1)!2}.play
 
 // getting modulator into audio range yields rich harmonic structure
 // try swapping freq scope into linear rather than logarithmic mode
-{SinOsc.ar(SinOsc.ar(300,0,220,440), 0.0, 0.5)!2}.play
+{SinOsc.ar(SinOsc.ar(300,0,220,440), 0.0, 0.1)!2}.play
 
 
 // modulating phase instead of frequency - yields the same effect, but the arguments need to be slighly adjusted
-{SinOsc.ar(440, SinOsc.ar(300,0, pi/4,0.5), 0.5)!2}.play
+{SinOsc.ar(440, SinOsc.ar(300,0, pi/4,0.5), 0.1)!2}.play
 
 //
 // 1- minute exercise - try plugging MouseX.kr into modulator frequency and amplitude
@@ -87,21 +117,21 @@ play({ PMOsc.ar(MouseX.kr(300,900,1), 600, 3, 0, 0.1) }); // modulate carfreq
 {
 
 	// freq, phase, amp
-	var ctls = [
+/*	var ctls = [
 		[ 300, 0,    1   ],
 		[ 400, pi/2, 1   ],
 		[ 730, 0,    0.5 ],
 		[ 0,   0,    0   ],
 		[ 0,   0,    0   ],
-		[ 0,   0,    0   ] ];
-	/*	var ctls = [
+		[ 0,   0,    0   ] ];*/
+	var ctls = [
 	[LFNoise1.kr(0.5).range(300, 310), 0, 1],
 	[LFNoise1.kr(0.5).exprange(3, 310), 0, 1],
 	[LFNoise1.kr(0.5).exprange(3, 100), 0, 1],
 	[LFNoise1.kr(0.5).exprange(3, 100), 0, 1],
 	[LFNoise1.kr(0.5).exprange(3, 100), 0, 1],
 	[LFNoise1.kr(0.5).exprange(3, 100), 0, 1]
-	];*/
+	];
 	Mix.ar(FM7.arAlgo(1, ctls, MouseX.kr(0, 2)))*0.1!2;
 	// Mix.ar(FM7.arAlgo(19, ctls, MouseX.kr(0, 2)))!2;
 	// Mix.ar(FM7.arAlgo(23, ctls, MouseX.kr(0, 2)))!2;
@@ -110,10 +140,9 @@ play({ PMOsc.ar(MouseX.kr(300,900,1), 600, 3, 0, 0.1) }); // modulate carfreq
 )
 
 
-//
+// -----------------------------------------------
 // Mixing and multichannel expansion
-//
-
+// -----------------------------------------------
 
 // Binaural beats
 (
@@ -177,9 +206,9 @@ play({ PMOsc.ar(MouseX.kr(300,900,1), 600, 3, 0, 0.1) }); // modulate carfreq
 }.scope
 )
 
-//
+// -----------------------------------------------
 // Additive synthesis
-//
+// -----------------------------------------------
 
 // now let's give our sine waves a harmonic structure
 // by adding 300 sine waves we get a triangluar wave
@@ -211,9 +240,11 @@ play({ PMOsc.ar(MouseX.kr(300,900,1), 600, 3, 0, 0.1) }); // modulate carfreq
 
 {Saw.ar(50,0.1)!2}.play
 
-//
+
+
+// -----------------------------------------------
 // Subtractive synthesis
-//
+// -----------------------------------------------
 
 
 // resonant low-pass filter
@@ -225,16 +256,18 @@ play({ PMOsc.ar(MouseX.kr(300,900,1), 600, 3, 0, 0.1) }); // modulate carfreq
 {MoogLadder.ar(Saw.ar(50,1),MouseX.kr(50,15000,1),MouseY.kr(0.01,1))!2}.play
 
 
-//
+// -----------------------------------------------
 // Modal synthesis
-//
+// -----------------------------------------------
 
 // feeding pulse bursts into banks of filters to emulate physical systems
 
 
-{Decay.ar(Impulse.ar(2) + Dust.ar(2), 0.03, PinkNoise.ar(0.1))}.play // noise bursts
+// noise bursts
+{Decay.ar(Impulse.ar(2) + Dust.ar(2), 0.03, PinkNoise.ar(0.1))}.play
 
 
+// let's feed them through the filter
 (
 {
 	Mix.fill(5,
@@ -256,17 +289,10 @@ play({ PMOsc.ar(MouseX.kr(300,900,1), 600, 3, 0, 0.1) }); // modulate carfreq
 
 
 
-{Decay.ar(Impulse.ar(2) + Dust.ar(2), 0.03, ClipNoise.ar(0.01))}.play
 
-
-
-Integrator
-
-Quarks.gui
-
-//
+// -----------------------------------------------
 // Granular synthesis
-//
+// -----------------------------------------------
 
 b = Buffer.read(s, Platform.resourceDir +/+ "sounds/a11wlk01.wav");
 b = Buffer.read(s, Platform.resourceDir +/+ "sounds/a11wlk01-44_1.aiff");
