@@ -91,7 +91,7 @@ In this 2-hour we'll aim to
 {SinOsc.ar(SinOsc.ar(0,0,0,440), 0.0, 0.1)!2}.play
 
 // gentle tremolo, 20Hz wide at 8Hz
-{SinOsc.ar(SinOsc.ar(8,0,10,440), 0.0, 0.1)!2}.play
+{SinOsc.ar(SinOsc.ar(1,0,10,440), 0.0, 0.1)!2}.play
 
 // not-so gentle tremolo, 880hz wide at 3Hz
 {SinOsc.ar(SinOsc.ar(3,0,440,440), 0.0, 0.1)!2}.play
@@ -102,7 +102,7 @@ In this 2-hour we'll aim to
 
 
 // modulating phase instead of frequency - yields the same effect, but the arguments need to be slighly adjusted
-{SinOsc.ar(440, SinOsc.ar(300,0, pi/4,0.5), 0.1)!2}.play
+{SinOsc.ar(440, SinOsc.ar(MouseX.kr(1,1000,1),0, pi/4,0.5), 0.1)!2}.play
 
 //
 // 1- minute exercise - try plugging MouseX.kr into modulator frequency and amplitude
@@ -110,7 +110,7 @@ In this 2-hour we'll aim to
 
 
 // PMOsc - dedicated phase modulation oscillator pair
-play({ PMOsc.ar(MouseX.kr(300,900,1), 600, 3, 0, 0.1) }); // modulate carfreq
+({ PMOsc.ar(MouseX.kr(300,900,1), 600, 3, 0, 0.1) }).play; // modulate carfreq
 
 // FM7 - implementation of Yamaha DX7 synthesiser
 (

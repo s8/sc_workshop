@@ -1,7 +1,15 @@
-// prerequisites:
-// mutable instruments UGEns: https://github.com/v7b1/mi-UGens/releases
-// put them into: ~/Library/Application\ Support/SuperCollider/Extensions/SC3plugins/
 
+//
+// prerequisites:
+//
+
+// mutable instruments UGEns:
+// https://github.com/v7b1/mi-UGens/releases
+
+// Otey piano UGens are part of the SC3 plugins package:
+// https://github.com/supercollider/sc3-plugins
+
+// put all these into: ~/Library/Application\ Support/SuperCollider/Extensions/SC3plugins/
 
 //
 // sound part
@@ -47,7 +55,7 @@ Synth.tail(1,\piano_soundboard);
 // composition part
 //
 
-
+(
 
 (
 a = Pbind(
@@ -96,9 +104,14 @@ f = Pbind(
 	\dur, Pseq([0.1,0.1,0.1,28], inf)
 ));
 
+)
+
 a.play;
 b.play;
 c.play;
 d.play;
 e.play;
 f.play;
+
+
+Quarks.gui

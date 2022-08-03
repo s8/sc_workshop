@@ -19,7 +19,7 @@
 				rrand(-1,1.0)
 			)
 		}
-	)
+	)*0.1
 }.play
 )
 
@@ -88,16 +88,18 @@ SynthDef(\saw_texture, {
 	var sound, env;
 
 	env = EnvGen.ar(Env.asr(),gate, doneAction:2);
-	sound = Saw.ar(freq, 0.1);
+	// sound = Saw.ar(freq, 0.1);
 
-	// sound = Mix.new(Saw.ar([freq*0.999, freq, freq*1.001], 0.1));
+	sound = Mix.new(Saw.ar([freq*0.999, freq, freq*1.001], 0.1))*0.1;
+
+	sound = MoogVCF.ar(sound, MouseX.kr(30,5000), MouseY.kr(0,1), 0.4);
 
 	Out.ar(out, sound * env!2);
 }).add
 )
 
 a = Synth(\saw_texture)
-a.set(\freq, 40)
+a.set(\freq, 75)
 
 
 
@@ -106,12 +108,14 @@ TempoClock.default.tempo = 1;
 (
 Pbind(
 	\instrument, \saw_texture,
-	\freq, Pseq([40, 45, 55], inf),
-	\dur, Pseq([0.5,0.5, 0.3],inf)
+	// \freq, Pseq([40, 45, 55, 77,], inf),
+	// \freq, Pseq([40, 45, 55, 77,].midicps, inf),
+	\note, Pseq([33,44,55,66]-50,inf),
+	\dur, Pseq([0.5,0.5, 0.3, 0.25],inf)
 ).play
 )
 
-
+55.midicps
 
 //
 // 10-minute excercise - make your own bass line
